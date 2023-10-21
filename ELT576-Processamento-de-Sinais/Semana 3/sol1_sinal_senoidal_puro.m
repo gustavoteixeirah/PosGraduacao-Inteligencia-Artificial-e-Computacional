@@ -1,18 +1,14 @@
-close all, clc;
+% Fecha todas as janelas de figuras abertas e limpa a janela de comando
+% close all, clc;
 
-
-% frequência de amostragem em hertz
-Fs = 8000; 
-
+% frequência da senoide em Hz
+Fs = 1000; 
 % numero de pontos
 L = 8000; 
-
 % representa valores de tempo correspondentes a cada ponto de amostra
 t = 0:1/Fs:(L-1)/Fs; 
-
-% sinal que combina uma forma de onda senoidal e ruído aleatório
-x = 0.7*sin(2*pi*500*t)+sin(2*pi*2000*t)+2*randn(1,L); 
-
+% Sinal Senoidal Puro
+x = sin(2*pi*Fs*t);
 
 % Plot
 figure()
@@ -44,5 +40,3 @@ subplot(2,2,4), plot(pfreq,abs(X(1:L/2+1)))
 title('X(jw) (sem a parte repetida)');
 xlabel('Frequência');
 ylabel('Amplitude');
-
-
