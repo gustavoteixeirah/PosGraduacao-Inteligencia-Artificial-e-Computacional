@@ -8,7 +8,7 @@ ELT 576 - PROCESSAMENTO INTELIGENTE DE SINAIS
 - [x] Semana 1
 - [x] Semana 2
 - [x] Semana 3
-- [ ] Semana 4
+- [x] Semana 4
 
 ELT 577 T1 - EMPREENDEDORISMO E INOVAÇÃO USANDO INTELIGÊNCIA ARTIFICIAL
 - [x] Semana 1
