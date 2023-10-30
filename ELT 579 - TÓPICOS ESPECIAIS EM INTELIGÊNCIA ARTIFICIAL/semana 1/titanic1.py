@@ -9,6 +9,9 @@ Created on Sat Oct 28 21:09:47 2023
 
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import cross_val_score
 
 # baseline 76%
 
@@ -49,7 +52,11 @@ def criar_features(X):
     subs = {'S':1, 'C':2, 'Q':3}
     X['porto'] = X['Embarked'].replace(subs)
     
+    X['ehCrianca'] = 1
+    X['ehCrianca'] = np.where(X['Age'] < 15, 1, 0)
     
+    X['ehIdoso'] = 0
+    X['ehIdoso'] = np.where(X['Age'] > 55, 1, 0)
     return X
 
 
@@ -62,17 +69,32 @@ X_test = criar_features(X_test)
 
 
 features = ['Pclass', 'Age', 'SibSp',
-       'Parch', 'Fare', 'mulher', 'porto']
+       'Parch', 'Fare', 'mulher', 'porto', 'ehCrianca', 'ehIdoso']
 X_train = X_train[features]
 X_test = X_test[features]
 
 y_train = train['Survived']
 
+#%% Visualização
+
+for i in X_train.columns:
+    plt.hist(X_train[i])
+    plt.title(i)
+    plt.show()
+  
+#%% Groupy
+
+gp = train.groupby(['Survived']).count()
+
+#%% pivot_table
+
+table = pd.pivot_table(train, index = ['Survived'], columns = ['Pclass'], values = 'PassengerId', aggfunc = 'count')
+
+
+
+
 
 #%% Padronizacao das variaveis
-
-from sklearn.preprocessing import StandardScaler
-
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 
@@ -83,20 +105,72 @@ X_test = scaler.transform(X_test)
 
 # Logistic Regression
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import cross_val_score
 # from sklearn.metrics import confusion_matrix
 # from sklearn.preprocessing import StandardScaler
 # pip install scikit-learn
 model_lr = LogisticRegression(max_iter = 1000, random_state=0)
 score = cross_val_score(model_lr, X_train, y_train, cv = 10)
 
-print(np.mean(score))
+model_lr_score =  np.mean(score)
+print("LogisticRegression: ", model_lr_score)
+
+#%% Naive Bayes
+
+from sklearn.naive_bayes import GaussianNB
+
+model_nb = GaussianNB()
+score = cross_val_score(model_nb, X_train, y_train, cv = 10)
+
+model_nb_score = np.mean(score)
+print("GaussianNB: ", model_nb_score)
+
+#%% Nearest Neighbors Classification
+
+from sklearn.neighbors import KNeighborsClassifier
+
+model_knc = KNeighborsClassifier(n_neighbors=10)
+score = cross_val_score(model_knc, X_train, y_train, cv = 10)
+
+model_knc_score = np.mean(score)
+print("Nearest Neighbors Classification: ", model_knc_score)
+
+#%% SVC
+
+from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
+
+model_svc = SVC(C=1, kernel='linear', degree=2, gamma=0.01)
+score = cross_val_score(model_svc, X_train, y_train, cv = 10)
+
+model_svc_score = np.mean(score)
+print("SVC: ", model_nb_score)
+
+
+#%% Decision tree
+
+from sklearn.tree import DecisionTreeClassifier
+
+model_dt = DecisionTreeClassifier(random_state=0, max_depth=3)
+score = cross_val_score(model_dt, X_train, y_train, cv = 10)
+
+model_dt_score = np.mean(score)
+print("Decision tree: ", model_dt_score)
+
+#%% Random Forest
+from sklearn.ensemble import RandomForestClassifier
+
+model_rf = RandomForestClassifier(n_estimators=80, max_depth=3, random_state=0)
+
+score = cross_val_score(model_rf, X_train, y_train, cv = 10)
+
+model_rf_score = np.mean(score)
+print("Decision tree: ", model_rf_score)
 
 #%% Modelo final
 
-model_lr.fit(X_train, y_train)
+model_rf.fit(X_train, y_train)
 
-y_pred = model_lr.predict(X_train)
+y_pred = model_rf.predict(X_train)
 
 #%% matrix de confusao
 from sklearn.metrics import confusion_matrix
@@ -105,12 +179,12 @@ cm = confusion_matrix(y_train, y_pred)
 
 print(cm)
 
-score = model_lr.score(X_train, y_train)
+score = model_rf.score(X_train, y_train)
 print(score)
 
 #%% Previsao final
 
-y_pred = model_lr.predict(X_test)
+y_pred = model_rf.predict(X_test)
 
 #%% Criar arquivo de submissao
 
