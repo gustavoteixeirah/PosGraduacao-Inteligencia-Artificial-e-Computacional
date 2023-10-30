@@ -36,16 +36,48 @@ X_test = test.drop(['PassengerId'], axis = 1)
 
 #%% Criar feature
 
-subs = {'female':1, 'male':0}
-X_train['mulher'] = X_train['Sex'].replace(subs)
-X_test['mulher'] = X_test['Sex'].replace(subs)
+def criar_features(X):
+    subs = {'female':1, 'male':0}
+    X['mulher'] = X['Sex'].replace(subs)
+    
+    X['Age'] = X['Age'].fillna(X['Age'].mean())
+    
+    X['Fare'] = X['Fare'].fillna(X['Fare'].mean())
+    
+    X['Embarked'] = X['Embarked'].fillna('S')
+    
+    subs = {'S':1, 'C':2, 'Q':3}
+    X['porto'] = X['Embarked'].replace(subs)
+    
+    
+    return X
+
+
+X_train = criar_features(X_train)
+X_test = criar_features(X_test)
+
+
 
 #%% Selecionar as features
 
-X_train = X_train[['mulher']]
-X_test = X_test[['mulher']]
+
+features = ['Pclass', 'Age', 'SibSp',
+       'Parch', 'Fare', 'mulher', 'porto']
+X_train = X_train[features]
+X_test = X_test[features]
 
 y_train = train['Survived']
+
+
+#%% Padronizacao das variaveis
+
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+
+X_test = scaler.transform(X_test)
+
 
 #%% Modelo e validacao cruzada
 
@@ -55,7 +87,7 @@ from sklearn.model_selection import cross_val_score
 # from sklearn.metrics import confusion_matrix
 # from sklearn.preprocessing import StandardScaler
 # pip install scikit-learn
-model_lr = LogisticRegression()
+model_lr = LogisticRegression(max_iter = 1000, random_state=0)
 score = cross_val_score(model_lr, X_train, y_train, cv = 10)
 
 print(np.mean(score))
