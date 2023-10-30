@@ -166,6 +166,50 @@ score = cross_val_score(model_rf, X_train, y_train, cv = 10)
 model_rf_score = np.mean(score)
 print("Decision tree: ", model_rf_score)
 
+#%% Otimização de hiperparametros
+from skopt import gp_minimize
+
+parametros =[('entropy', 'gini'), 
+             (100, 1000),
+             (3, 20),
+             (2,10),
+             (1, 10)]
+
+def treinar_modelo(parametros):
+    model_rf = RandomForestClassifier(
+                                      criterion=parametros[0],
+                                      n_estimators=parametros[1],
+                                      max_depth=parametros[2],
+                                      min_samples_split=parametros[3],
+                                      min_samples_leaf=parametros[4],
+                                      random_state=0)
+
+    score = cross_val_score(model_rf, X_train, y_train, cv = 10)
+
+    mean_score = np.mean(score)
+    
+    return -mean_score
+otimos = gp_minimize(treinar_modelo, parametros, random_state=0, verbose=1, n_calls=50, n_random_starts=10)
+
+
+#%% Ensamble
+
+from sklearn.ensemble import VotingClassifier
+
+model_voting = VotingClassifier(estimators==[('LR', model_lr),
+                                             ('KNN', model_knc),
+                                             ('SVC', model_svc),
+                                             ('RF', model_rf)],
+                                voting='hard')
+
+model_voting.fit(X_train, y_train)
+
+ score = cross_val_score(model_voting, X_train, y_train, cv = 10)
+
+ model_voting_score = np.mean(score)
+ print("Decision tree: ", model_voting_score)
+
+
 #%% Modelo final
 
 model_rf.fit(X_train, y_train)
