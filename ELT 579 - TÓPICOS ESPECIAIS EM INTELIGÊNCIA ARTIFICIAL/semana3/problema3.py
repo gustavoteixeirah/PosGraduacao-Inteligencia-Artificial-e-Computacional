@@ -57,8 +57,8 @@ from tensorflow.keras.layers import Dense
 
 ann = Sequential()
 
-ann.add(Dense(units=4, input_dim=2, activation='relu'))
-ann.add(Dense(units=3, activation='relu'))
+ann.add(Dense(units=5, input_dim=2, activation='relu'))
+ann.add(Dense(units=4, activation='relu'))
 ann.add(Dense(units=1))
 
 #%%  compile
@@ -126,3 +126,10 @@ plt.show()
 
 
 #%%
+# R2 =  0.09
+# MAE =  231.66
+# MSE =  78265.3
+
+# R2 =  0.16
+# MAE =  198.72
+# MSE =  59801.7
