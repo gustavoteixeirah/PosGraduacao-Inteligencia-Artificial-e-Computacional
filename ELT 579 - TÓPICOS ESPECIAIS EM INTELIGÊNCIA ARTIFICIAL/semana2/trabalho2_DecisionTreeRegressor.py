@@ -41,13 +41,18 @@ for i in range(1, max_features + 1):
 
     X_sel = X_train_sc[sel_features]
 
-    score_sel = cross_val_score(modelo, X_sel, y_train, cv=10, scoring="r2")
+    score_sel = cross_val_score(modelo, X_sel, y_train, cv=10, scoring="r2", n_jobs=-1)
     mean_score = np.mean(score_sel)
     print("i: " + str(i) + " = " + str(mean_score))
     score_list.append(score_sel)
+# %% Plot dos scores
+import matplotlib.pyplot as plt
 
+plt.plot(score_list)
+plt.show()
 # %% selecionar as features
 
+modelo = RandomForestRegressor()
 selector = RFE(modelo, n_features_to_select=11, step=1)
 
 selector = selector.fit(X_train_sc, y_train)
@@ -70,6 +75,7 @@ print(np.mean(score))
 
 # %% modelo final
 
+modelo = RandomForestRegressor()
 modelo.fit(X_sel, y_train)
 
 
