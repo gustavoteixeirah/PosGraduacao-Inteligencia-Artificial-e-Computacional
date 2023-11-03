@@ -61,27 +61,26 @@ ann.add(Dense(units=5, input_dim=2, activation='relu'))
 ann.add(Dense(units=4, activation='relu'))
 ann.add(Dense(units=1))
 
-#%%  compile
-ann.compile(optimizer = 'adam', loss = 'mean_squared_error', metrics = ['mae'])
+# %%  compile
+ann.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae'])
 ann.summary()
 
-#%% Treinamento da rede neural
+# %% Treinamento da rede neural
 
-history = ann.fit(X_train_pca, y_train, batch_size= 10, validation_split=0.1, epochs = 250)
+history = ann.fit(X_train_pca, y_train, batch_size=10,
+                  validation_split=0.1, epochs=600)
 
-
-
-#%%
-#plotar gráficos
+# %%
+# plotar gráficos
 import matplotlib.pyplot as plt
 
 loss = history.history['loss']
 val_loss = history.history['val_loss']
 
-epochs = range(1, len(loss)+ 1)
+epochs = range(1, len(loss) + 1)
 
-plt.plot(epochs, loss, 'y', label = "Treinamento")
-plt.plot(epochs, val_loss, 'r', label = "Validação")
+plt.plot(epochs, loss, 'y', label="Treinamento")
+plt.plot(epochs, val_loss, 'r', label="Validação")
 
 plt.title("Treinamento versus validação")
 plt.xlabel("Epocas")
@@ -89,15 +88,14 @@ plt.ylabel("Função custo (Loss)")
 plt.legend()
 plt.show()
 
-
-#%% Teste
+# %% Teste
 
 y_pred = ann.predict(X_test_pca)
 
 plt.scatter(y_test, y_pred)
 plt.show()
 
-#%%
+# %%
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
@@ -112,7 +110,7 @@ print('R2 = ', round(r2, 2))
 print("MAE = ", round(mae, 2))
 print("MSE = ", round(mse, 2))
 
-#predição dos dados de teste
+# predição dos dados de teste
 y_pred = ann.predict(X_test_pca)
 
 y = np.arange(0, 1200)
@@ -124,8 +122,7 @@ plt.scatter(y_test, y_pred)
 plt.plot(y, yp)
 plt.show()
 
-
-#%%
+# %%
 # R2 =  0.09
 # MAE =  231.66
 # MSE =  78265.3
@@ -133,3 +130,7 @@ plt.show()
 # R2 =  0.16
 # MAE =  198.72
 # MSE =  59801.7
+
+# R2 =  0.28
+# MAE =  129.54
+# MSE =  30119.65
