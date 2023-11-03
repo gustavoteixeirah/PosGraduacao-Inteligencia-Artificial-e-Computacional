@@ -57,8 +57,9 @@ from tensorflow.keras.layers import Dense
 
 ann = Sequential()
 
-ann.add(Dense(units=5, input_dim=2, activation='relu'))
-ann.add(Dense(units=4, activation='relu'))
+ann.add(Dense(units=6, input_dim=2, activation='relu'))
+ann.add(Dense(units=5, activation='relu'))
+ann.add(Dense(units=3, activation='relu'))
 ann.add(Dense(units=1))
 
 # %%  compile
@@ -68,7 +69,7 @@ ann.summary()
 # %% Treinamento da rede neural
 
 history = ann.fit(X_train_pca, y_train, batch_size=10,
-                  validation_split=0.1, epochs=600)
+                  validation_split=0.1, epochs=400)
 
 # %%
 # plotar gráficos
@@ -134,3 +135,10 @@ plt.show()
 # R2 =  0.28
 # MAE =  129.54
 # MSE =  30119.65
+
+# R2 =  0.29
+# MAE =  126.27
+# MSE =  29150.34
+#%%
+
+#%%
