@@ -20,5 +20,5 @@ ELT 578 - ANÁLISE DE IMAGENS E VISÃO COMPUTACIONAL
 ELT 579 - TÓPICOS ESPECIAIS EM INTELIGÊNCIA ARTIFICIAL
 - [x] Semana 1
 - [x] Semana 2
-- [ ] Semana 3
+- [x] Semana 3
 - [ ] Semana 4
