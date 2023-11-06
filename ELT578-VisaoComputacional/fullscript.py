@@ -44,7 +44,7 @@ plate = gray[beginY:endY, beginX:endX]
 increase = cv2.resize(plate, None, fx=1.2, fy=1.2, interpolation=cv2.INTER_CUBIC)
 value, otsu = cv2.threshold(increase, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
-config_tesseract = "--tessdata-dir tessdata --psm 6"
+config_tesseract = "--tessdata-dir tessdata --psm 1"
 text = pytesseract.image_to_string(plate, lang="por", config=config_tesseract)
 text = "".join(character for character in text if character.isalnum())
 print("Placa detectada: ", text)
